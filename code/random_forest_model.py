@@ -1,12 +1,11 @@
 # 1. Importing relevant modules
+import joblib
 import pandas as pd
-import joblib 
-
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, ConfusionMatrixDisplay
-from sklearn.model_selection import RandomizedSearchCV 
 from scipy.stats import randint
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
+                             confusion_matrix, precision_score, recall_score)
+from sklearn.model_selection import RandomizedSearchCV
 
 # 2. Importing training sets 
 X_train = pd.read_csv()

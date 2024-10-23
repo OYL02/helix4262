@@ -1,11 +1,9 @@
 # 1. Importing relevant modules
+import joblib
 import pandas as pd
-import joblib 
-
-from xgboost import XGBClassifier
-from sklearn.model_selection import RandomizedSearchCV 
 from scipy.stats import randint
-
+from sklearn.model_selection import RandomizedSearchCV
+from xgboost import XGBClassifier
 
 # 2. Importing training sets 
 X_train = pd.read_csv()
