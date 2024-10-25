@@ -143,7 +143,10 @@ def pipeline_nn(df):
     Xtrain_resampled, ytrain_resampled = synthetic_oversampling(Xtrain_scaled, ytrain)
 
     # Merging Xtrain and Xtest, and ytrain and ytest
-    X_merged = pd.concat([Xtrain_resampled, Xtest])
+    Xtest_v = trigram_tokenize(Xtest, vectorizer)
+    Xtest_v = remove_columns(Xtest_v)
+
+    X_merged = pd.concat([Xtrain_resampled, Xtest_v])
     y_merged = pd.concat([ytrain_resampled, ytest])
     
     return vectorizer, standardizer, X_merged, y_merged
