@@ -129,7 +129,7 @@ def pipeline_nn(df):
     Xtrain, Xtest, ytrain, ytest = data_split(df)
 
     # Vectorization
-    vectorizer = create_vectorizer(Xtrain,3)
+    vectorizer = create_vectorizer(Xtrain,5)
     Xtrain_v = trigram_tokenize(Xtrain, vectorizer)
 
     # Remove the "transcript_name", "gene_id", "nucleotide_seq" columns
