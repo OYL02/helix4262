@@ -150,3 +150,28 @@ def pipeline_nn(df):
     y_merged = pd.concat([ytrain_resampled, ytest])
     
     return vectorizer, standardizer, X_merged, y_merged
+
+def pipeline_nn_unlabelled(df):
+    """
+    Purpose: Process the unlabelled dataset the same way as we process the labelled dataset used for training the NN model.
+             Vectorization followed by dropping of unecessary columns and then standardising.
+
+    Input:
+        1. df: dataframe 
+
+    Output:
+        2. processed_df : dataframe 
+    """
+    # Vectorization
+    vectorizer = create_vectorizer(df,3) # changed from 5 to 3 for rfc
+    df_v = trigram_tokenize(df, vectorizer)
+
+    # Remove the "transcript_name", "gene_id", "nucleotide_seq" columns
+    df_v = df_v.drop(["transcript_name", "nucleotide_seq"], axis=1)
+
+    # Scaling the whole df
+    standardizer = create_standardizer(df_v)
+    processed_df = standardize_data(df_v, standardizer)
+    
+    return processed_df
+
