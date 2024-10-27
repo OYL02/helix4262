@@ -150,3 +150,44 @@ def pipeline_nn(df):
     y_merged = pd.concat([ytrain_resampled, ytest])
     
     return vectorizer, standardizer, X_merged, y_merged
+
+def process_new_data(filepath, vectorizer, standardizer):
+    # Read in test dataset to make predictions on
+    # data_file_path = "../../dataset/d1_mean_final.csv"
+    # data_file_path = "../../dataset/d2_mean_final.csv"
+    # data_file_path = "../../dataset/Xtest.csv"
+    X_test = pd.read_csv(filepath)
+
+
+    # Process test data: vectorizing, removing unwanted columns, scaling
+
+    # Vectorization with vectorizer fitted on training data
+    X_test_v = trigram_tokenize(X_test, vectorizer)
+
+    # Remove the "transcript_name", "gene_id" (for dataset0), "nucleotide_seq" columns
+    # X_test_v = remove_columns(X_test_v) #for Xtest from dataset0, cause theres gene id for that
+    X_test_v = X_test_v.drop(["transcript_name", "nucleotide_seq"], axis=1)
+
+    # Scaling Xtest_v with Scaler fitted on training data
+    X_test_scaled = standardize_data(X_test_v, standardizer)
+    '''
+    # Prediction
+    # y_pred = model.predict(X_test_scaled) # class predictions
+    y_pred_prob = model.predict_proba(X_test_scaled) # predicted probabilities for classes 0 and 1
+    pred_for_classes = pd.DataFrame(y_pred_prob, columns= ["no_modification_probability", "modified_probability"])
+    y_pred_m6a = pred_for_classes["modified_probability"]
+
+    # Merged prediction back to original dataframe (pre processing) to format final output of transcriptname, transcript position, score
+    merged = pd.concat([X_test, y_pred_m6a], axis=1)
+    final = merged[["transcript_name", "json_position", "modified_probability"]]
+    final.rename(columns={'transcript_name':'transcript_id', 'json_position': 'transcript_position', 'modified_probability': 'score'}, inplace=True)
+
+
+    # stem attribute extracts the file
+    # name
+    name = Path(data_file_path).stem
+    model_name = model.__class__.__name__
+    results_file_path = "../../prediction/"+model_name+"_prediction_"+name+".csv"
+    final.to_csv(results_file_path, index=False)
+    '''
+    return X_test_scaled
