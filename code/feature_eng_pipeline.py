@@ -157,16 +157,14 @@ def process_new_data(df, vectorizer, standardizer):
              Vectorization followed by dropping of unecessary columns and then standardising.
 
     Input:
-        1. df: datafframe of the new dataset 
+        1. df: dataframe of the new dataset 
         2. vectorizer: vectorizer based on dataset0 training data (an output of pipeline_nn function)
         3. standardizer: standardizer based on dataset0 training data (an output of pipeline_nn function)
 
     Output:
         4. X_test_scaled : dataframe after processing 
     """
-
-    # Read in test dataset to make predictions on
-    # X_test = pd.read_csv(filepath)
+    
     X_test = df
 
     # Process test data: vectorizing, removing unwanted columns, scaling
