@@ -151,13 +151,13 @@ def pipeline_nn(df):
     
     return vectorizer, standardizer, X_merged, y_merged
 
-def process_new_data(filepath, vectorizer, standardizer):
+def process_new_data(df, vectorizer, standardizer):
     """
     Purpose: Process the unlabelled, new dataset the same way as we process the labelled dataset used for training the NN model.
              Vectorization followed by dropping of unecessary columns and then standardising.
 
     Input:
-        1. filepath: filepath of new dataset
+        1. df: datafframe of the new dataset 
         2. vectorizer: vectorizer based on dataset0 training data (an output of pipeline_nn function)
         3. standardizer: standardizer based on dataset0 training data (an output of pipeline_nn function)
 
@@ -166,7 +166,8 @@ def process_new_data(filepath, vectorizer, standardizer):
     """
 
     # Read in test dataset to make predictions on
-    X_test = pd.read_csv(filepath)
+    # X_test = pd.read_csv(filepath)
+    X_test = df
 
     # Process test data: vectorizing, removing unwanted columns, scaling
 
