@@ -123,7 +123,7 @@ def pipeline_all(df):
 
 def pipeline_nn(df):
     """
-    Purpose: Setting up the pipeline? to drop unnecessary columns, followed by vectorizing, splitting, standardising and oversampling
+    Purpose: Setting up the pipeline to drop unnecessary columns, followed by vectorizing, splitting, standardising and oversampling
     """
     # Train-test split and remove the "transcript_name", "gene_id", "nucleotide_seq" columns
     Xtrain, Xtest, ytrain, ytest = data_split(df)

@@ -1,3 +1,8 @@
+import json
+
+import pandas as pd
+
+
 def json_to_csv(input_file_path, output_file_path):
     """
     This function will take in a data.json file and convert it into a csv.
@@ -10,8 +15,6 @@ def json_to_csv(input_file_path, output_file_path):
     Output:
         Returns None 
     """
-    import json
-    import pandas as pd
 
     json_object = []
 
