@@ -1,10 +1,14 @@
-import copy
+import argparse
 
 import numpy as np
 import torch
 import tqdm
-from sklearn.metrics import (auc, precision_recall_curve, roc_auc_score,
-                             roc_curve)
+from neural_net_model import ModNet
+from neural_net_preproc import RNANanoporeDataset
+from sklearn.metrics import auc, precision_recall_curve, roc_auc_score
+from torch import nn
+from torch.utils.data import DataLoader
+from torch.utils.data.dataset import random_split
 
 DEVICE = (
     "cuda"
@@ -14,166 +18,48 @@ DEVICE = (
     else "cpu"
 )
 
-class EarlyStopper:
+# TODO: implement model checkpoint-dict, modelstate-dict, evalresults-path? 
+# TODO: might also need to implement labels_path and include preprocessing as part of the training workflow. depends.
+def parse_arguments():
+    """Parses the arguments that are supplied by the user
+    
+    Returns:
+        Namespace: parsed arguments from the user
     """
-    Early stopping to prevent overfitting and save best model
-    """
-    def __init__(self, patience=5, min_delta=0, path='best_model.pth'):
-        """
-        Args:
-            patience (int): Number of epochs to wait before early stopping
-            min_delta (float): Minimum change in monitored value to qualify as an improvement
-            path (str): Path to save the best model
-        """
-        self.patience = patience
-        self.min_delta = min_delta
-        self.path = path
-        self.counter = 0
-        self.best_loss = None
-        self.early_stop = False
-        self.best_model = None
-    
-    def __call__(self, model, current_loss):
-        if self.best_loss is None:
-            self.best_loss = current_loss
-            self.save_checkpoint(model)
-        elif current_loss > self.best_loss - self.min_delta:
-            self.counter += 1
-            print(f'Early stopping counter: {self.counter} out of {self.patience}')
-            if self.counter >= self.patience:
-                self.early_stop = True
-        else:
-            self.best_loss = current_loss
-            self.save_checkpoint(model)
-            self.counter = 0
-        
-        return self.early_stop
-    
-    def save_checkpoint(self, model):
-        """Save model when validation loss decreases"""
-        torch.save(model.state_dict(), self.path)
-        self.best_model = copy.deepcopy(model)
-    
-    def load_best_model(self):
-        """Load the best model"""
-        return self.best_model
-
-def train_model_with_early_stopping(model, trainloader, valloader, criterion, optimizer, 
-                                  num_epochs=100, patience=5, device=DEVICE):
-    """
-    Training loop with early stopping
-    
-    Args:
-        model: ModNet instance
-        trainloader: Training data loader
-        valloader: Validation data loader
-        criterion: Loss function
-        optimizer: Optimizer
-        num_epochs: Maximum number of epochs
-        patience: Early stopping patience
-        device: Device to train on
-    """
-    # Initialize early stopper
-    early_stopper = EarlyStopper(patience=patience, path='best_model.pth')
-    
-    # Training history
-    history = {
-        'train_loss': [],
-        'val_loss': [],
-        'val_roc_auc': [],
-        'val_pr_auc': []
-    }
-    
-    for epoch in range(num_epochs):
-        # Training phase
-        model.train()
-        train_loss = 0.0
-
-        loop = tqdm(enumerate(trainloader),
-                    total=len(trainloader))
-
-        for i, (signal_features, labels) in loop:
-            signal_features = signal_features.to(device)
-            labels = labels.to(device)
-            
-            # Forward pass
-            read_level_probs = model(signal_features)
-            site_level_probs = model.noisy_or_pooling(read_level_probs).squeeze()
-            
-            # Compute loss
-            loss = criterion(site_level_probs, labels.float())
-            
-            # Backward and optimize
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            
-            train_loss += loss.item()
-            
-            if i % 10 == 9:
-                print(f'Epoch [{epoch+1}/{num_epochs}], '
-                      f'Batch [{i+1}/{len(trainloader)}], '
-                      f'Loss: {train_loss/10:.4f}')
-                train_loss = 0.0
-        
-        # Validation phase
-        model.eval()
-        val_loss = 0.0
-        all_labels = []
-        all_predictions = []
-        
-        with torch.no_grad():
-            for signal_features, labels in valloader:
-                signal_features = signal_features.to(device)
-                labels = labels.to(device)
-                
-                read_level_probs = model(signal_features)
-                site_level_probs = model.noisy_or_pooling(read_level_probs).squeeze()
-                
-                loss = criterion(site_level_probs, labels.float())
-                val_loss += loss.item()
-                
-                all_labels.extend(labels.cpu().numpy())
-                all_predictions.extend(site_level_probs.cpu().numpy())
-        
-        # Calculate validation metrics
-        val_loss = val_loss / len(valloader)
-        all_labels = np.array(all_labels)
-        all_predictions = np.array(all_predictions)
-        
-        roc_auc = roc_auc_score(all_labels, all_predictions)
-        precision, recall, _ = precision_recall_curve(all_labels, all_predictions)
-        pr_auc = auc(recall, precision)
-        
-        # Update history
-        history['train_loss'].append(train_loss / len(trainloader))
-        history['val_loss'].append(val_loss)
-        history['val_roc_auc'].append(roc_auc)
-        history['val_pr_auc'].append(pr_auc)
-        
-        print(f'Epoch [{epoch+1}/{num_epochs}]')
-        print(f'Validation Loss: {val_loss:.4f}')
-        print(f'ROC-AUC: {roc_auc:.4f}')
-        print(f'PR-AUC: {pr_auc:.4f}')
-        
-        # Early stopping check
-        if early_stopper(model, val_loss):
-            print("Early stopping triggered!")
-            break
-    
-    # Load best model
-    best_model = early_stopper.load_best_model()
-    
-    return best_model, history
+    parser = argparse.ArgumentParser(description="Trains the Neural Network for predicting m6a modifications on RNA Transcriptomes")
+    required = parser.add_argument_group("required arguments")
+    required.add_argument("-dp", '--data-path', metavar='', type='str', required=True,
+                          help="Full path to the .csv file including features and labels for training")
+    optional = parser.add_argument_group("optional arguments")
+    optional.add_argument('-ts', '--train-size', metavar='', default=0.8,
+                          help='proportion of dataset used for training. Should be a float between 0 and 1. Default is 0.8.')
+    optional.add_argument('-ne', '--num-epochs', metavar='', default=10,
+                          help='number of epochs used for training. Default is 10.')
+    optional.add_argument('-lr', '--learning-rate', metavar='', default=0.001,
+                          help='Learning rate for training the neural network. Default is 0.001.')
+    optional.add_argument('-bs', '--batch-size', metavar='', default=256,
+                          help='Number of datapoints in each batch used to train the neural network. Default is 0.001.')
+    return args
 
 def evaluate_model(model, testloader, criterion, device=DEVICE):
+    """Evaluates the performance of the Neural Network based on the Area under ROC and PRC
+
+    Args:
+        model (ModNet): neural network model that was used for training
+        testloader (DataLoader): RNANanoporeDataset object created during the training process.
+        criterion (BCEWithLogitsLoss): loss function optimized during training process.
+        device (str): device used for training. Can take values 'cpu', 'mps', and 'cuda'. 
+
+    Returns:
+        tuple: tuple with average loss per row, area under ROC curve and area under PR curve
+    """
     model.eval()  
     total_loss = 0.0
     all_labels = []
     all_predictions = []
 
     with torch.no_grad():
-        for data in testloader:
+        for data in tqdm(testloader, desc="Evaluating", leave=False):  # Wrap testloader with tqdm
             signal_features, labels = data
             
             # Move data to device
@@ -184,7 +70,7 @@ def evaluate_model(model, testloader, criterion, device=DEVICE):
             read_level_probs = model(signal_features)
             site_level_probs = model.noisy_or_pooling(read_level_probs).squeeze() 
 
-            # ensure single dimension tensor
+            # Ensure single dimension tensor
             if site_level_probs.dim() > 1:
                 site_level_probs = site_level_probs.squeeze()
 
@@ -209,5 +95,98 @@ def evaluate_model(model, testloader, criterion, device=DEVICE):
     avg_loss = total_loss / len(testloader)
     
     print(f'Test Loss: {avg_loss:.4f}, ROC-AUC: {roc_auc:.4f}, PR-AUC: {pr_auc:.4f}')
-    
     return avg_loss, roc_auc, pr_auc
+
+def train_model_with_checks(args):
+    """
+    Training loop with dimension checks.
+
+    Args:
+        args (Namespace): parsed arguments from the user 
+    """
+    device = DEVICE
+
+    rna_data = RNANanoporeDataset(data_path=args.data_path)
+
+    # perform train test split on data
+    train_size = int(args.train_size * len(rna_data))
+    test_size = len(rna_data) - train_size
+    trainset, testset = random_split(rna_data, [train_size, test_size])
+    trainloader = DataLoader(trainset, batch_size=args.batch_size, shuffle=True)
+    testloader = DataLoader(testset, batch_size=args.batch_size, shuffle=False)
+
+    # get number of signal features
+    sample_features, _ = next(iter(trainloader))
+    expected_input_dim = sample_features.shape[1]
+
+    # instantiate model using number of signal features; set to training mode
+    model = ModNet(signal_input_dim=79)
+    model.to(device)
+    model.train()
+
+    # define number of epochs, optimizer and loss function to optimize
+    # default num_epochs is 10, learning rate is 0.001
+    num_epochs = args.num_epochs
+    criterion = nn.BCEWithLogitsLoss() 
+    optimizer = torch.optim.Adam(model.parameters(), 
+                                 lr=args.learning_rate)
+    
+    for epoch in range(num_epochs):
+        running_loss = 0.0
+
+        loop = tqdm(enumerate(trainloader), total=len(trainloader))
+        
+        for i, data in loop:
+            signal_features, labels = data
+            
+            # Check dimensions before forward pass
+            current_input_dim = signal_features.shape[1]
+            if current_input_dim != expected_input_dim:
+                raise ValueError(
+                    f"Input dimension mismatch! Model expects {expected_input_dim} "
+                    f"features but got {current_input_dim} features. "
+                    f"Full input shape: {signal_features.shape}"
+                )
+            
+            signal_features = signal_features.to(device)
+            labels = labels.to(device).float()
+            
+            try:
+                # Forward pass
+                read_level_probs = model(signal_features)
+                site_level_probs = model.noisy_or_pooling(read_level_probs).squeeze()
+
+                if site_level_probs.dim() > 1:
+                    site_level_probs = site_level_probs.squeeze()
+                
+                # Compute loss
+                loss = criterion(site_level_probs, labels)
+                
+                # Zero gradients, backward pass, and optimization
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                
+                running_loss += loss.item()
+                if i % 10 == 9:
+                    print(f'Epoch [{epoch+1}/{num_epochs}], '
+                          f'Batch [{i+1}/{len(trainloader)}], '
+                          f'Loss: {running_loss/10:.4f}')
+                    running_loss = 0.0
+                    
+            except RuntimeError as e:
+                print(f"\nError in batch {i}:")
+                print(f"Input shape: {signal_features.shape}")
+                print(f"Label shape: {labels.shape}")
+                print(f"Error message: {str(e)}")
+                raise e
+    
+    print('Model Training has ended. \nNow evaluating results...')
+
+    full_data = DataLoader(rna_data, batch_size=256, shuffle=True)
+    evaluate_model(model, full_data, criterion, device=DEVICE)
+
+if __name__ == "__main__":
+    torch.manual_seed(42)
+    args = parse_arguments()
+    train_model_with_checks(args)
