@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import imblearn
 from imblearn.over_sampling import SMOTE
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer

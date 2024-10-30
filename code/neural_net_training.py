@@ -1,14 +1,16 @@
 import argparse
+import os
 
 import numpy as np
 import torch
-import tqdm
+from tqdm import tqdm
 from neural_net_model import ModNet
 from neural_net_preproc import RNANanoporeDataset
 from sklearn.metrics import auc, precision_recall_curve, roc_auc_score
 from torch import nn
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import random_split
+
 
 DEVICE = (
     "cuda"
@@ -28,7 +30,7 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Trains the Neural Network for predicting m6a modifications on RNA Transcriptomes")
     required = parser.add_argument_group("required arguments")
-    required.add_argument("-dp", '--data-path', metavar='', type='str', required=True,
+    required.add_argument("-dp", '--data-path', metavar='', type=str, required=True,
                           help="Full path to the .csv file including features and labels for training")
     optional = parser.add_argument_group("optional arguments")
     optional.add_argument('-ts', '--train-size', metavar='', default=0.8,
@@ -39,6 +41,11 @@ def parse_arguments():
                           help='Learning rate for training the neural network. Default is 0.001.')
     optional.add_argument('-bs', '--batch-size', metavar='', default=256,
                           help='Number of datapoints in each batch used to train the neural network. Default is 0.001.')
+    optional.add_argument('-msd', '--modelstate-dict', metavar='', type=str, default=os.path.join(".", "models/state", "model.pth"),
+                        help="Full filepath to where we want to store the model state (Default: ./models/state/model.pth)")
+    optional.add_argument('-cpd', '--checkpoint-dict', metavar='', type=str, default="",
+                        help="Full filepath to the checkpoint dictionary, this is required if you want to continue training from the previous round (Default: '')")
+    args = parser.parse_args()
     return args
 
 def evaluate_model(model, testloader, criterion, device=DEVICE):
@@ -106,7 +113,7 @@ def train_model_with_checks(args):
     """
     device = DEVICE
 
-    rna_data = RNANanoporeDataset(data_path=args.data_path)
+    rna_data = RNANanoporeDataset(csv_file=args.data_path)
 
     # perform train test split on data
     train_size = int(args.train_size * len(rna_data))
@@ -119,13 +126,23 @@ def train_model_with_checks(args):
     sample_features, _ = next(iter(trainloader))
     expected_input_dim = sample_features.shape[1]
 
+    # grab checkpoint state. if passed directory for checkpoint does not exist
+    if args.checkpoint_dict and not (os.path.exists(args.checkpoint_dict)):
+        raise Exception("Checkpoint directory stated does not exist, please check if the right directory is given")
+    checkpoint = torch.load(args.checkpoint_dict) if args.checkpoint_dict else {}
+
     # instantiate model using number of signal features; set to training mode
     model = ModNet(signal_input_dim=79)
+
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(args.modelstate_dict), exist_ok=True)
+    if checkpoint:
+        model.load_state_dict(checkpoint['model_state_dict'])
+
     model.to(device)
     model.train()
 
     # define number of epochs, optimizer and loss function to optimize
-    # default num_epochs is 10, learning rate is 0.001
     num_epochs = args.num_epochs
     criterion = nn.BCEWithLogitsLoss() 
     optimizer = torch.optim.Adam(model.parameters(), 
@@ -133,10 +150,9 @@ def train_model_with_checks(args):
     
     for epoch in range(num_epochs):
         running_loss = 0.0
-
-        loop = tqdm(enumerate(trainloader), total=len(trainloader))
         
-        for i, data in loop:
+        # TODO: remove newline for every iteration trained
+        for i, data in tqdm(enumerate(trainloader), total=len(trainloader), dynamic_ncols=True, desc="Training", leave=False):
             signal_features, labels = data
             
             # Check dimensions before forward pass
@@ -180,6 +196,13 @@ def train_model_with_checks(args):
                 print(f"Label shape: {labels.shape}")
                 print(f"Error message: {str(e)}")
                 raise e
+    
+        torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': loss
+                }, args.modelstate_dict)
     
     print('Model Training has ended. \nNow evaluating results...')
 

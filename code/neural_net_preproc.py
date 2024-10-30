@@ -1,7 +1,14 @@
+import sys
+from pathlib import Path
+
 import pandas as pd
 import torch
-from feature_eng_pipeline import pipeline_nn
 from torch.utils.data import Dataset
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).resolve().parent))
+
+from feature_eng_pipeline import pipeline_nn
 
 
 class RNANanoporeDataset(Dataset):
