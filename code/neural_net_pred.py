@@ -98,7 +98,11 @@ def predict_on_new_dataset(model, dataset, batch_size=32, device=torch.device('c
             
             # Forward pass
             read_level_probs = model(signal_features)
-            site_level_probs = model.noisy_or_pooling(read_level_probs).squeeze()
+            site_level_probs = model.noisy_or_pooling(read_level_probs) # Removed .squeeze (31/10)
+
+            # Added 31/10 
+            if site_level_probs.dim() > 1:
+                site_level_probs = site_level_probs.squeeze()
             
             # Store predictions and labels
             predictions = (site_level_probs > 0.5).float()
@@ -132,7 +136,7 @@ def predict_neural_network(args):
     data_dir = path.parent
 
     # data pre process: convert json to csv, read in csv as df and do aggregation
-    #can we just make json to csv return a df since data_agg_mean takes in df too?
+    # can we just make json to csv return a df since data_agg_mean takes in df too?
     data_file = data_name + ".csv"
     data_csv = os.path.join(data_dir, data_file)
     json_to_csv(path, data_csv)
