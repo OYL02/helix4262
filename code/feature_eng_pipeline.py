@@ -2,7 +2,9 @@ from pathlib import Path
 
 import pandas as pd
 import imblearn
+import os
 from imblearn.over_sampling import SMOTE
+from joblib import dump, load
 from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import GroupShuffleSplit
@@ -122,7 +124,7 @@ def pipeline_all(df):
     
     return vectorizer, standardizer, Xtrain_resampled, Xtest, ytrain_resampled, ytest
 
-def pipeline_nn(df):
+def pipeline_nn(df, v_outpath, s_outpath):
     """
     Purpose: Setting up the pipeline to drop unnecessary columns, followed by vectorizing, splitting, standardising and oversampling
     """
@@ -150,6 +152,13 @@ def pipeline_nn(df):
     X_merged = pd.concat([Xtrain_resampled, Xtest_v])
     y_merged = pd.concat([ytrain_resampled, ytest])
     
+    directory_v = os.path.dirname(v_outpath)
+    os.makedirs(directory_v, exist_ok=True)
+    directory_s = os.path.dirname(s_outpath)
+    os.makedirs(directory_s, exist_ok=True)
+    dump(vectorizer, v_outpath)
+    dump(standardizer, s_outpath)
+
     return vectorizer, standardizer, X_merged, y_merged
 
 def process_new_data(df, vectorizer, standardizer):
