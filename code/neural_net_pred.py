@@ -36,8 +36,8 @@ def parse_arguments():
                           help="Full filepath to where we want to store the trained vectorizer. (Default: ./data_preparators/vectorizer.joblib)")
     optional.add_argument('-sp', '--standardizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "standardizer.joblib"),
                           help="Full filepath to where we want to store the trained standardizer. (Default: ./data_preparators/standardizer.joblib)")
-    optional.add_argument('-pp', '--prediction-path', metavar='', type=str, default=os.path.join(".", "prediction", "predict_on_data.csv"),
-                          help="Filepath to store predictions in csv format. (Default: ./prediction/predict_on_data.csv)") #kiv, dw to hardcode incase multiple predictions, see if can do sth
+    optional.add_argument('-pp', '--prediction-path', metavar='', type=str,
+                          help="Filepath to store predictions in csv format. (otherwise, would be saved in this format: ./prediction/predict_on_datafile.csv)")
     args = parser.parse_args()
     return args
 
