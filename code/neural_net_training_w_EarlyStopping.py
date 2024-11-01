@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import torch
+import pandas as pd
 from tqdm import tqdm
 from neural_net_model import ModNet
 from neural_net_preproc import RNANanoporeDataset
