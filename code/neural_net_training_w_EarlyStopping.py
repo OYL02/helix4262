@@ -22,7 +22,7 @@ DEVICE = (
 
 
 class EarlyStopping:
-    def __init__(self, patience=3, min_delta=0.0, path='model.pth'):
+    def __init__(self, patience=5, min_delta=0.0, path='model.pth'):
         """
         Initialize early stopping parameters.
 
@@ -34,19 +34,21 @@ class EarlyStopping:
         self.patience = patience
         self.min_delta = min_delta
         self.counter = 0
-        self.best_loss = None
-        self.stop = False
+        self.best_loss = float("-inf")
         self.path = path
 
-    def __call__(self, val_loss, model):
-        if self.best_loss is None or val_loss < self.best_loss - self.min_delta:
-            self.best_loss = val_loss
-            self.counter = 0
-            torch.save(model.state_dict(), self.path)
-        else:
+    def early_stop(self, val_loss):
+        stop = False
+        if val_loss < self.best_loss - self.min_delta:
             self.counter += 1
             if self.counter >= self.patience:
-                self.stop = True
+                stop = True
+        elif val_loss > self.best_loss:
+            self.best_loss = val_loss
+            self.counter = 0 # reset counter
+        return stop
+        
+            
 
 # TODO: implement model checkpoint-dict, modelstate-dict, evalresults-path? 
 # TODO: might also need to implement labels_path and include preprocessing as part of the training workflow. depends.
@@ -170,16 +172,19 @@ def train_model_with_checks(args):
     model.to(device)
     model.train()
 
+
+    # Adjust patience as needed
+    early_stopper = EarlyStopping(patience=5, min_delta = 0.01)
+
     # define number of epochs, optimizer and loss function to optimize
     num_epochs = args.num_epochs
     criterion = nn.BCEWithLogitsLoss() 
     optimizer = torch.optim.Adam(model.parameters(), 
                                  lr=args.learning_rate)
     
-    # Adjust patience as needed
-    early_stopper = EarlyStopping(patience=3, path=args.modelstate_dict)
-
-
+    roc =[]
+    pr =[]
+    
     for epoch in range(num_epochs):
         running_loss = 0.0
         
@@ -228,22 +233,25 @@ def train_model_with_checks(args):
                 print(f"Label shape: {labels.shape}")
                 print(f"Error message: {str(e)}")
                 raise e
+        
+         
+        avg_loss, roc_score, pr_score = evaluate_model(model, rna_data)
+        roc.append(roc_score)
+        pr.append(pr_score)
+        results_df = pd.DataFrame({'roc_score': roc, 'pr_score': pr})
+        print(results_df)    
+        
+        if (roc_score + pr_score) >= early_stopper.best_loss:
+            torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss': loss
+                    }, args.modelstate_dict)
             
-        # Validate and check early stopping
-        val_loss, _, _ = evaluate_model(model, testloader, criterion, device=device)
-        print(f'Epoch [{epoch+1}/{num_epochs}], Validation Loss: {val_loss:.4f}')
-
-        early_stopper(val_loss, model)
-        if early_stopper.stop:
+        if early_stopper.early_stop(roc_score+pr_score):
             print("Early stopping triggered. Stopping training.")
             break
-    
-        torch.save({
-                'epoch': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'loss': loss
-                }, args.modelstate_dict)
     
     print('Model Training has ended. \nNow evaluating results...')
 
