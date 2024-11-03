@@ -9,3 +9,5 @@ https://github.com/OYL02/helix4262.git
 5. set up environment, install python requirement with requirements.txt file using the following command:
 pip install -r requirements.txt
 6. 
+7. aws s3 cp --no-sign-request http://sg-nex-data.s3-website-ap-southeast-1.amazonaws.com/#data/processed_data/m6Anet/
+8. 
