@@ -3,6 +3,7 @@ import os
 
 import numpy as np
 import torch
+import pandas as pd
 from tqdm import tqdm
 from neural_net_model import ModNet
 from neural_net_preproc import RNANanoporeDataset
@@ -239,7 +240,7 @@ def train_model_with_checks(args):
                 raise e
         
          
-        avg_loss, roc_score, pr_score = evaluate_model(model, rna_data)
+        avg_loss, roc_score, pr_score = evaluate_model(model, rna_data, criterion)
         roc.append(roc_score)
         pr.append(pr_score)
         results_df = pd.DataFrame({'roc_score': roc, 'pr_score': pr})
