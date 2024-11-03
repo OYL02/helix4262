@@ -75,6 +75,10 @@ def parse_arguments():
                         help="Full filepath to where we want to store the model state (Default: ./models/state/model.pth)")
     optional.add_argument('-cpd', '--checkpoint-dict', metavar='', type=str, default="",
                         help="Full filepath to the checkpoint dictionary, this is required if you want to continue training from the previous round (Default: '')")
+    optional.add_argument('-vp', '--vectorizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "vectorizer.joblib"),
+                          help="Full filepath to where we want to store the trained vectorizer. (Default: ./data_preparators/vectorizer.joblib)")
+    optional.add_argument('-sp', '--standardizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "standardizer.joblib"),
+                          help="Full filepath to where we want to store the trained standardizer. (Default: ./data_preparators/standardizer.joblib)")
     args = parser.parse_args()
     return args
 
