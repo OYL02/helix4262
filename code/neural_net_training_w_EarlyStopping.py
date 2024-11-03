@@ -3,7 +3,6 @@ import os
 
 import numpy as np
 import torch
-import pandas as pd
 from tqdm import tqdm
 from neural_net_model import ModNet
 from neural_net_preproc import RNANanoporeDataset
@@ -144,7 +143,7 @@ def train_model_with_checks(args):
     """
     device = DEVICE
 
-    rna_data = RNANanoporeDataset(csv_file=args.data_path)
+    rna_data = RNANanoporeDataset(csv_file=args.data_path, v_outpath=args.vectorizer_path, s_outpath=args.standardizer_path)
 
     # perform train test split on data
     train_size = int(args.train_size * len(rna_data))
