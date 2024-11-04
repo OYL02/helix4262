@@ -4,6 +4,28 @@
 
 ## Folder Structure (TBC)
 
+```
+.
+├── code/
+│   ├── data_preparators
+│   ├── models/
+│   │   ├── state
+│   │   └── model.pth
+│   ├── prediction/
+│   │   └── ModNet_predict_on_dataset3.csv
+│   ├── README.md
+│   ├── data_agg_mean.py
+│   ├── data_agg_process.py
+│   ├── json_to_csv_fxn.py
+│   ├── neural_net_model.py
+│   ├── neural_net_pred.py
+│   ├── neural_net_preproc.py
+│   ├── neural_net_training.py
+│   ├── neural_net_training_w_EarlyStopping.py
+│   ├── random_forest_model.py
+│   └── xg_boost_model.py
+```
+
 ## Downloading the Dataset
 
 Before training the model, create a folder named `dataset` using the following command while still in the `helix4262` folder:
@@ -42,7 +64,7 @@ python -m neural_net_training --help
 python3 -m neural_net_training --help
 ```
 
-## Flags for Training Model (TBC)
+## Flags for Training Model
 
 **Required Arguments**: These arguments needs to be passed in for the program to run.
 
@@ -77,6 +99,18 @@ If you are currently in the `helix4262` folder, you can run the command below to
 ```bash
 cd code
 ```
+To train the model, you can pass in relevant arguments into the `neural_net_pred` module and the model specified will be used to create predictions of m6a modification on the specified dataset.
+
+You can run the following command to find out the parameters that can be passed into the creating predictions using a specified model and dataset:
+
+```bash
+# windows
+python -m neural_net_pred --help
+
+# macOS
+python3 -m neural_net_pred --help
+```
+
 ### Flags for Making Predictions using Model (TBC)
 
 **Required Arguments**: These arguments needs to be passed in for the program to run.

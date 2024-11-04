@@ -14,6 +14,16 @@ ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 
 ## Folder Structure (TBC)
 
+```
+.
+├── code/
+├── notebooks/
+├── .gitignore
+├── LICENSE
+├── README.md
+└── requirements.txt
+```
+
 ## Software Requirements
 
 1. Python version >= 3.8
