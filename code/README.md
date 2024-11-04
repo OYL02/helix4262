@@ -22,9 +22,9 @@ aws s3 cp --no-sign-request s3://sg-nex-data/data/processed_data/m6Anet/SGNex_A5
 
 ## Training the Model
 
-Ensure that you are in the `code` folder before continuing with training the model.
+Ensure that you are in the `helix4262/code` folder before continuing with training the model.
 
-To change directory into the `code` folder to run the scripts for training and predicting.
+If you are currently in the `helix4262` folder, you can run the command below to change directory into the `code` folder to run the scripts for training and predicting.
 
 ```bash
 cd code
@@ -69,7 +69,15 @@ python3 -m neural_net_training --help
 
 ## Predictions using Model
 
-## Flags for Making Predictions using Model (TBC)
+### Change Directory (if required)
+Ensure that you are in the `helix4262/code` folder before continuing with predictions using the model.
+
+If you are currently in the `helix4262` folder, you can run the command below to change directory into the `code` folder to run the scripts for training and predicting.
+
+```bash
+cd code
+```
+### Flags for Making Predictions using Model (TBC)
 
 **Required Arguments**: These arguments needs to be passed in for the program to run.
 
