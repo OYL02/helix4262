@@ -2,7 +2,7 @@
 
 `ModNet` is a `pytorch` neural network model that was derived from the model architecture defined by `m6anet` and developed by our team for detecting m6a RNA modifications in the SG-Nex dataset. 
 
-## Folder Structure (TBC)
+## Folder Structure
 
 ```
 .
@@ -115,11 +115,18 @@ python3 -m neural_net_pred --help
 
 **Required Arguments**: These arguments needs to be passed in for the program to run.
 
-[insert table]
+| Short Flag | Long Flag        | Description                                 |
+|------------|------------------|---------------------------------------------|
+| -dj        | --data-json-path | Path to direct RNA-Seq data in JSON format. |
 
 **Optional Arguments**: These arguments do not need to be passed in for the program to run, as there are default arguments passed in for the program to work with them. These arguments can be specified at the discretion of the user.
 
-[insert table]
+| Short Flag | Long Flag           | Description                                                       | Default                                | Datatype |
+|------------|---------------------|-------------------------------------------------------------------|----------------------------------------|----------|
+| -msd       | --modelstate-dict   | Filepath where model state (trained model) is stored.             | ./models/state/model.pth               | str      |
+| -vp        | --vectorizer-path   | Full filepath to where we want to store the trained vectorizer.   | ./data_preparators/vectorizer.joblib   | str      |
+| -sp        | --standardizer-path | Full filepath to where we want to store the trained standardizer. | ./data_preparators/standardizer.joblib | str      |
+| -pp        | --prediction-path   | Filepath to store predictions in CSV format.                      | ./prediction/predict_on_datafile.csv   | str      |
 
 ### Run Training with Sample Dataset 
 
