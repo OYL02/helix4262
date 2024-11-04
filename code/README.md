@@ -46,11 +46,22 @@ python3 -m neural_net_training --help
 
 **Required Arguments**: These arguments needs to be passed in for the program to run.
 
-[insert table]
+| Short Flag | Long Flags  | Description                                                           |
+|------------|-------------|-----------------------------------------------------------------------|
+| -dp        | --data-path | Full path to the .csv file including features and labels for training |
 
 **Optional Arguments**: These arguments do not need to be passed in for the program to run, as there are default arguments passed in for the program to work with them. These arguments can be specified at the discretion of the user.
 
-[insert table]
+| Short Flag | Long Flags         | Description                                                                                                            | Default                                | Datatype |
+|------------|--------------------|------------------------------------------------------------------------------------------------------------------------|----------------------------------------|----------|
+| -ts        | --train-size       | Proportion of dataset used for training. Should be a float between 0 and 1.                                            | 0.8                                    | float    |
+| -ne        | --num-epochs       | Number of epochs used for training.                                                                                    | 10                                     | int      |
+| -lr        | --learning-rate    | Learning rate for training the neural network.                                                                         | 0.001                                  | float    |
+| -bs        | --batch-size       | Number of datapoints in each batch used to train the neural network.                                                   | 256                                    | int      |
+| -msd       | --modelstate-dict  | Full filepath to where we want to store the model state                                                                | ./models/state/model.pth               | str      |
+| -cpd       | --checkpoint-dict  | Full filepath to the checkpoint dictionary, this is required if you want to continue training from the previous round. | None                                   | str      |
+| -vp        | -vectorizer-path   | Full filepath to where we want to store the trained vectorizer.                                                        | ./data_preparators/vectorizer.joblib   | str      |
+| -sp        | -standardizer-path | Full filepath to where we want to store the trained standardizer.                                                      | ./data_preparators/standardizer.joblib | str      |
 
 ### Run Training with Sample Dataset (TBC)
 

@@ -3,14 +3,13 @@ import os
 
 import numpy as np
 import torch
-from tqdm import tqdm
 from neural_net_model import ModNet
 from neural_net_preproc import RNANanoporeDataset
 from sklearn.metrics import auc, precision_recall_curve, roc_auc_score
 from torch import nn
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import random_split
-
+from tqdm import tqdm
 
 DEVICE = (
     "cuda"
@@ -40,15 +39,15 @@ def parse_arguments():
     optional.add_argument('-lr', '--learning-rate', metavar='', default=0.001,
                           help='Learning rate for training the neural network. Default is 0.001.')
     optional.add_argument('-bs', '--batch-size', metavar='', default=256,
-                          help='Number of datapoints in each batch used to train the neural network. Default is 0.001.')
+                          help='Number of datapoints in each batch used to train the neural network. Default is 256.')
     optional.add_argument('-msd', '--modelstate-dict', metavar='', type=str, default=os.path.join(".", "models/state", "model.pth"),
-                        help="Full filepath to where we want to store the model state (Default: ./models/state/model.pth)")
+                        help="Full filepath to where we want to store the model state. Default is `./models/state/model.pth`.")
     optional.add_argument('-cpd', '--checkpoint-dict', metavar='', type=str, default="",
-                        help="Full filepath to the checkpoint dictionary, this is required if you want to continue training from the previous round (Default: '')")
+                        help="Full filepath to the checkpoint dictionary, this is required if you want to continue training from the previous round. Default is ''.")
     optional.add_argument('-vp', '--vectorizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "vectorizer.joblib"),
-                          help="Full filepath to where we want to store the trained vectorizer. (Default: ./data_preparators/vectorizer.joblib)")
+                          help="Full filepath to where we want to store the trained vectorizer. Default is `./data_preparators/vectorizer.joblib`.")
     optional.add_argument('-sp', '--standardizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "standardizer.joblib"),
-                          help="Full filepath to where we want to store the trained standardizer. (Default: ./data_preparators/standardizer.joblib)")
+                          help="Full filepath to where we want to store the trained standardizer. Default is `./data_preparators/standardizer.joblib`.")
     args = parser.parse_args()
     return args
 
