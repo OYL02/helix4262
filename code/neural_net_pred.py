@@ -1,13 +1,13 @@
 import argparse
 import os
-
-from joblib import dump, load
-import torch
-import pandas as pd
 from pathlib import Path
-from neural_net_preproc import NewRNANanoporeDataset
+
+import pandas as pd
+import torch
+from data_pre_process import data_agg_mean, json_to_csv
+from joblib import dump, load
 from neural_net_model import ModNet
-from data_pre_process import json_to_csv, data_agg_mean
+from neural_net_preproc import NewRNANanoporeDataset
 from torch.utils.data import DataLoader
 
 DEVICE = (
@@ -28,16 +28,16 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Predicting m6A modifications on RNA Transcriptomes using trained model")
     required = parser.add_argument_group("required arguments")
     required.add_argument('-dj', '--data-json-path', metavar='', type=str, required=True,
-                          help="Path to direct RNA-Seq data, processed by m6Anet, in json format.") #full file path or dont need
+                          help="Path to direct RNA-Seq data in JSON format.") #full file path or dont need
     optional = parser.add_argument_group("optional arguments")
     optional.add_argument('-msd', '--modelstate-dict', metavar='', type=str, default=os.path.join(".", "models/state", "model.pth"),
-                        help="Filepath where model state (trained model) is stored. (Default: ./models/state/model.pth)") #need full filepath or dont need?
+                        help="Filepath where model state (trained model) is stored. Default is `./models/state/model.pth`.") #need full filepath or dont need?
     optional.add_argument('-vp', '--vectorizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "vectorizer.joblib"),
-                          help="Full filepath to where we want to store the trained vectorizer. (Default: ./data_preparators/vectorizer.joblib)")
+                          help="Full filepath to where we want to store the trained vectorizer. Default is `./data_preparators/vectorizer.joblib`")
     optional.add_argument('-sp', '--standardizer-path', metavar='', type=str, default=os.path.join(".", "data_preparators", "standardizer.joblib"),
-                          help="Full filepath to where we want to store the trained standardizer. (Default: ./data_preparators/standardizer.joblib)")
+                          help="Full filepath to where we want to store the trained standardizer. Default is `./data_preparators/standardizer.joblib`.")
     optional.add_argument('-pp', '--prediction-path', metavar='', type=str,
-                          help="Filepath to store predictions in csv format. (otherwise, would be saved in this format: ./prediction/predict_on_datafile.csv)")
+                          help="Filepath to store predictions in csv format. Default is `./prediction/predict_on_datafile.csv`.")
     args = parser.parse_args()
     return args
 
