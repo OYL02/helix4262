@@ -85,9 +85,14 @@ python3 -m neural_net_training --help
 | -vp        | -vectorizer-path   | Full filepath to where we want to store the trained vectorizer.                                                        | ./data_preparators/vectorizer.joblib   | str      |
 | -sp        | -standardizer-path | Full filepath to where we want to store the trained standardizer.                                                      | ./data_preparators/standardizer.joblib | str      |
 
-### Run Training with Sample Dataset (TBC)
+### Run Training with Sample Dataset 
 
-### Run Training with Custom Dataset (TBC)
+To train a new `ModNet` model using the preprocessed sample dataset provided on SG-NEx, run the following command:
+
+```bash
+# assume that the JSON data has been preprocessed
+python -m neural_net_training --data-path ../dataset/data.csv
+```
 
 ## Predictions using Model
 
@@ -135,6 +140,3 @@ To predict m6a modifications on the dataset, run the following command in `bash`
 ```bash
 python3 -m neural_net_pred -dj "../dataset/data.json"
 ```
-
-### Run Training with Custom Dataset (TBC)
-
