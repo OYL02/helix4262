@@ -24,6 +24,12 @@ aws s3 cp --no-sign-request s3://sg-nex-data/data/processed_data/m6Anet/SGNex_A5
 
 Ensure that you are in the `code` folder before continuing with training the model.
 
+To change directory into the `code` folder to run the scripts for training and predicting.
+
+```bash
+cd code
+```
+
 To train the model, you can pass in relevant arguments into the `neural_net_training` module and a newly instantiated model will be trained.
 
 You can run the following command to find out the parameters that can be passed into the training the neural network.
