@@ -2,6 +2,10 @@
 
 `ModNet` is a `pytorch` neural network model that was derived from the model architecture defined by `m6anet` and developed by our team for detecting m6a RNA modifications in the SG-Nex dataset. 
 
+## Network Architecture
+
+![model](../diagrams/model.png)
+
 ## Folder Structure
 
 ```
@@ -14,9 +18,7 @@
 │   ├── prediction/
 │   │   └── ModNet_predict_on_dataset3.csv
 │   ├── README.md
-│   ├── data_agg_mean.py
-│   ├── data_agg_process.py
-│   ├── json_to_csv_fxn.py
+│   ├── data_pre_process.py
 │   ├── neural_net_model.py
 │   ├── neural_net_pred.py
 │   ├── neural_net_preproc.py
@@ -25,6 +27,8 @@
 │   ├── random_forest_model.py
 │   └── xg_boost_model.py
 ```
+
+![software](../diagrams/software.png)
 
 ## Downloading the Dataset
 

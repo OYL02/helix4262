@@ -19,8 +19,6 @@ DEVICE = (
     else "cpu"
 )
 
-# TODO: implement model checkpoint-dict, modelstate-dict, evalresults-path? 
-# TODO: might also need to implement labels_path and include preprocessing as part of the training workflow. depends.
 def parse_arguments():
     """Parses the arguments that are supplied by the user
     
