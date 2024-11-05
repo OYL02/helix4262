@@ -76,13 +76,6 @@ pip3 install -r requirements.txt
 
 These packages will be included in your virtual environment and the virtual environment will have to be activated before running any of the scripts in this repository.
 
-## Running Scripts
 
-Change directory into the `code` folder to run the scripts for training and predicting.
-
-```bash
-cd code
-```
-
-After running the above scripts, you may proceed here to learn how to train new models and predict using existing models.
+After running the above commands, you may proceed here (https://github.com/OYL02/helix4262/tree/a139317411cce917eb50107ee10050a86cffc0ef/code) to learn how to train new models and predict using existing models.
 
