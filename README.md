@@ -1,4 +1,5 @@
-# helix4262
+# Predicting m6A methylation sites using neural networks
+## helix4262
 ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 
 ## Table of Contents
