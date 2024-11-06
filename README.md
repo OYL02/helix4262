@@ -1,5 +1,5 @@
 # Predicting m6A methylation sites using neural networks
-## helix4262
+## Team helix4262
 ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 
 ## Table of Contents
@@ -30,7 +30,7 @@ ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 
 ## Setting Up
 
-### Machine Setup  (to verify)
+### Machine Setup  
 
 1. AWS Instance: If you are running on the AWS Instance, start a new instance that is at least t3.large. This is to ensure that the model does not run too long. Note that the default Python version for the instance will be at least Python 3.8.
 
