@@ -12,6 +12,8 @@
 .
 ├── code/
 │   ├── data_preparators
+│   │   ├── standardizer.joblib
+│   │   └── vectorizer.joblib
 │   ├── models/
 │   │   ├── state
 │   │   └── model.pth

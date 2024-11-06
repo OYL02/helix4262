@@ -2,21 +2,20 @@
 ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 
 ## Table of Contents
-- Folder Structure (TBC)
+- Folder Structure
 - Software Requirements 
-- Setting Up (TBC)
+- Setting Up 
     - Machine Setup
     - Cloning Repository
     - Install Software & Packages
-- Running Scripts (TBC)
-    - Training a New Model
-    - Predicting using Model
 
-## Folder Structure (TBC)
+## Folder Structure
 
 ```
 .
 ├── code/
+├── dataset/
+├── diagrams/
 ├── notebooks/
 ├── .gitignore
 ├── LICENSE
@@ -81,5 +80,5 @@ pip3 install -r requirements.txt
 These packages will be included in your virtual environment and the virtual environment will have to be activated before running any of the scripts in this repository.
 
 
-After running the above commands, you may proceed here (https://github.com/OYL02/helix4262/tree/a139317411cce917eb50107ee10050a86cffc0ef/code) to learn how to train new models and predict using existing models.
+After running the above commands, you may proceed [here](https://github.com/OYL02/helix4262/tree/a139317411cce917eb50107ee10050a86cffc0ef/code) to learn how to train new models and predict using existing models.
 
