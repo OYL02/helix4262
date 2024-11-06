@@ -35,6 +35,10 @@ ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 1. AWS Instance: If you are running on the AWS Instance, start a new instance that is at least t3.large. This is to ensure that the model does not run too long. Note that the default Python version for the instance will be at least Python 3.8.
 
 2. Locally : If you are running locally, ensure that you have at least Python version ≥ 3.8
+3. You may check the Python version with the following command:
+```
+python3 --version
+```
 
 ### Cloning Repository
 
