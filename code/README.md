@@ -12,11 +12,11 @@
 .
 ├── code/
 │   ├── data_preparators
+│   │   ├── standardizer.joblib
+│   │   └── vectorizer.joblib
 │   ├── models/
 │   │   ├── state
 │   │   └── model.pth
-│   ├── prediction/
-│   │   └── ModNet_predict_on_dataset3.csv
 │   ├── README.md
 │   ├── data_pre_process.py
 │   ├── neural_net_model.py
