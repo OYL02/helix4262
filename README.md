@@ -3,7 +3,14 @@
 ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 
 ## Project Description
+
 This project aims to leverage on computational methods to develop and train a machine learning model capable of detecting and predicting m6A methylation sites across various datasets from different cancer cell lines. By improving the accuracy and efficiency of m6A site detection, this model can potentially enhance early cancer detection, ultimately contributing to a reduction in cancer-related mortality. The final model is ModNet with neural network architecture.
+
+## Citation
+
+If you use this software in your research, please cite it as follows:
+
+Lim, H. X., Lim, T. X., Ong, Y. L., & Wang, Y. (2024). *Predicting m6A modified sites on RNA data with ModNet* (Version 1.0.0) [Computer software]. GitHub. https://github.com/OYL02/helix4262. https://doi.org/10.5281/zenodo.14046278
 
 ## Table of Contents
 - Folder Structure
