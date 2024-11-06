@@ -30,11 +30,7 @@
 
 ## Downloading the Dataset
 
-Before training the model, create a folder named `dataset` using the following command while still in the `helix4262` folder:
-
-```bash
-mkdir dataset
-```
+In the `helix4262` folder, there is a folder named `dataset` to store datasets that will be downloaded. Note that the folder contains some sample datasets. 
 
 If you are using a local machine to train the model, make sure to install the AWS CLI before downloading the dataset. Instructions may be found [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#:~:text=Run%20the%20install%20program.,write%20permissions%20to%20those%20directories.).
 
