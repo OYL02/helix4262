@@ -140,3 +140,23 @@ To predict m6a modifications on the dataset, run the following command in `bash`
 ```bash
 python3 -m neural_net_pred -dj "../dataset/data.json"
 ```
+
+Model predictions would be saved in `helix4262/code/prediction` folder as a CSV file.
+
+### Viewing prediction
+
+Change directory to `helix4262/code/prediction` folder. If you are currently in the `helix4262/code' folder, you can use the following command:
+```
+cd prediction
+```
+
+The following command would list all the files in the `helix4262/code/prediction` folder:
+```
+ls
+```
+
+If the prediction file name is `ModNet_predict_on_data.csv`, you can view the first few entries of the the prediction file with the following command:
+```
+head ModNet_predict_on_data.csv
+```
+Otherwise, replace `ModNet_predict_on_data.csv` with the correct file name.
