@@ -24,8 +24,6 @@
 │   ├── neural_net_preproc.py
 │   ├── neural_net_training.py
 │   ├── neural_net_training_w_EarlyStopping.py
-│   ├── random_forest_model.py
-│   └── xg_boost_model.py
 ```
 
 ![software](../diagrams/software.png)
