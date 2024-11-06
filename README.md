@@ -17,7 +17,6 @@ ModNet: Developed by Lim Hui Xuan, Lim Tze Xin, Ong Yi Lin and Wang Yiling
 ├── code/
 ├── dataset/
 ├── diagrams/
-├── notebooks/
 ├── .gitignore
 ├── LICENSE
 ├── README.md
