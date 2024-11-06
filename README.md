@@ -10,7 +10,7 @@ This project aims to leverage on computational methods to develop and train a ma
 
 If you use this software in your research, please cite it as follows:
 
-Lim, H. X., Lim, T. X., Ong, Y. L., & Wang, Y. (2024). *Predicting m6A modified sites on RNA data with ModNet* (Version 1.0.0) [Computer software]. GitHub. https://github.com/OYL02/helix4262. https://doi.org/10.5281/zenodo.14046278
+Lim, H. X., Lim, T. X., Ong, Y. L., & Wang, Y. (2024). *Predicting m6A modified sites on RNA data with ModNet* (Version 1.0.0) [Computer software]. GitHub. https://github.com/OYL02/helix4262. https://doi.org/10.5281/zenodo.14046279
 
 ## Table of Contents
 - Folder Structure
