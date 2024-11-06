@@ -145,7 +145,7 @@ Model predictions would be saved in `helix4262/code/prediction` folder as a CSV 
 
 ### Viewing prediction
 
-Change directory to `helix4262/code/prediction` folder. If you are currently in the `helix4262/code' folder, you can use the following command:
+Change directory to `helix4262/code/prediction` folder. If you are currently in the `helix4262/code` folder, you can use the following command:
 ```
 cd prediction
 ```
