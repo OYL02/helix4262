@@ -18,7 +18,10 @@
 │   │   ├── state
 │   │   └── model.pth
 │   ├── README.md
+|   ├── data_agg_mean.py
 │   ├── data_pre_process.py
+│   ├── feature_eng_pipeline.py
+│   ├── json_to_csv_fxn.py
 │   ├── neural_net_model.py
 │   ├── neural_net_pred.py
 │   ├── neural_net_preproc.py
