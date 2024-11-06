@@ -80,5 +80,5 @@ pip3 install -r requirements.txt
 These packages will be included in your virtual environment and the virtual environment will have to be activated before running any of the scripts in this repository.
 
 
-After running the above commands, you may proceed [here](https://github.com/OYL02/helix4262/tree/0c618b8300cf697960439a461ac8a380a232fa47/code) to learn how to train new models and predict using existing models.
+After running the above commands, you may proceed [here](https://github.com/OYL02/helix4262/tree/main/code) to learn how to train new models and predict using existing models.
 
